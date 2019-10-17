@@ -2,4 +2,4 @@
 
 SET path=%~dp0
 
-java -classpath ".;%path:~0,-5%\lib\*" Main %*
+java %JAVA_OPTS% -classpath ".;%path:~0,-5%\lib\*" Main %*
