@@ -1,0 +1,32 @@
+name: Publish
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Build dist
+      run: make dist
+
+    - uses: klakegg/github-upload@v0.8.3
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        file: target/dist.zip
+        name: xsdchecker-${TAG}.zip
+        label: Distribution (zip)
+
+    - uses: klakegg/github-upload@v0.8.3
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        file: target/dist.tar.gz
+        name: xsdchecker-${TAG}.tar.gz
+        label: Distribution (tar.gz)
