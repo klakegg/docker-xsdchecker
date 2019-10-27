@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout
+      uses: actions/checkout@v1
 
     - name: Build jar
       run: make jar
@@ -18,7 +19,8 @@ jobs:
     - name: Build image
       run: make graal
 
-    - uses: klakegg/github-upload@v0.9.1
+    - name: Upload "JAR file"
+      uses: klakegg/github-upload@v0.9.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -27,7 +29,8 @@ jobs:
         label: JAR file
         type: application/java-archive
 
-    - uses: klakegg/github-upload@v0.9.1
+    - name: Upload "Executable (Linux 64bit)"
+      uses: klakegg/github-upload@v0.9.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
