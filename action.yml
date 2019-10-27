@@ -1,5 +1,5 @@
 name: XsdChecker
-description: ...
+description: Validate XML instance documents using XSD.
 
 branding:
   icon: tool
@@ -21,4 +21,4 @@ runs:
   image: 'docker://klakegg/xsdchecker:1.0.2'
   args:
     - ${{ inputs.xsd }}
-    - ${{ inpits.file }}
+    - ${{ inputs.file }}
