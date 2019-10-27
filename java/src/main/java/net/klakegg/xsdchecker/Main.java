@@ -89,7 +89,7 @@ public class Main {
         } catch (FileNotFoundException e) {
             err(path, "File not found");
         } catch (SAXParseException e) {
-            err(path, String.format("%s:%s - %s", e.getLineNumber(), e.getColumnNumber(), e.getMessage()));
+            err(path, String.format("Line %s:%s - %s", e.getLineNumber(), e.getColumnNumber(), e.getMessage()));
         } catch (SAXException | IOException e) {
             err(path, e.getMessage());
         }
