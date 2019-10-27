@@ -8,6 +8,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.*;
@@ -104,14 +105,20 @@ public class Main {
             System.out.println(path);
 
             return true;
+        } catch (FileNotFoundException e) {
+            err(path, "File not found");
         } catch (SAXException | IOException e) {
-            System.err.print("[FAIL] ");
-            System.err.println(path);
-
-            System.err.print("> ");
-            System.err.println(e.getMessage());
-
-            return false;
+            err(path, e.getMessage());
         }
+
+        return false;
+    }
+
+    private static void err(File path, String message) {
+        System.err.print("[FAIL] ");
+        System.err.println(path);
+
+        System.err.print("> ");
+        System.err.println(message);
     }
 }

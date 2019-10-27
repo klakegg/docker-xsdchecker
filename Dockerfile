@@ -17,6 +17,7 @@ RUN cd /src/graal && sh build.sh
 FROM alpine:3.10
 
 COPY --from=graalvm /target/bin/xsdchecker /bin/xsdchecker
+COPY schemas /schemas
 
 VOLUME /src
 
