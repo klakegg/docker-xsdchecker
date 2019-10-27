@@ -7,6 +7,7 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 /**
  * @author erlend
@@ -32,10 +33,16 @@ public class Main {
     private static Validator prepare(String path) {
         try {
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(new File(path));
+            Schema schema;
+
+            if (path.startsWith("http")) {
+                schema = factory.newSchema(new URL(path));
+            } else {
+                schema = factory.newSchema(new File(path));
+            }
 
             return schema.newValidator();
-        } catch (SAXException e) {
+        } catch (SAXException | IOException e) {
             System.err.print("Unable to load XSD file: ");
             System.err.println(e.getMessage());
             System.exit(3);

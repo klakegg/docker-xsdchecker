@@ -1,5 +1,8 @@
 #!/bin/sh
 
+set -e
+set -u
+
 # Create build folder
 mkdir -p /tmp/build /target
 
