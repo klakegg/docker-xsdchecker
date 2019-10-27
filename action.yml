@@ -1,0 +1,24 @@
+name: XsdChecker
+description: ...
+
+branding:
+  icon: tool
+  color: green
+
+inputs:
+  xsd:
+    description: XSD file.
+    required: true
+    example: xsd/schema.xsd
+
+  file:
+    description: File to validate
+    required: true
+    example: example.xml
+
+runs:
+  using: docker
+  image: 'docker://klakegg/xsdchecker:1.0.1'
+  args:
+    - ${{ inputs.xsd }}
+    - ${{ inpits.file }}

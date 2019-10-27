@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test -e /target/xsdchecker.jar || sh /src/java/build.sh
+# This file is triggered by make inside a Docker image.
 
 # Create native image
 native-image \

@@ -1,3 +1,5 @@
+package net.klakegg.xsdchecker;
+
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -8,6 +10,9 @@ import javax.xml.validation.Validator;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author erlend
@@ -19,7 +24,6 @@ public class Main {
             System.out.println("Arguments: [xsd file] [xml file...]");
             System.exit(2);
         }
-
         Validator validator = prepare(args[0]);
 
         boolean success = true;
@@ -52,8 +56,50 @@ public class Main {
     }
 
     private static boolean perform(Validator validator, String path) {
+        if (path.contains("*")) {
+            return performGlob(validator, path);
+        } else {
+            return perform(validator, new File(path));
+        }
+    }
+
+    private static boolean performGlob(Validator validator, String path) {
+        AtomicBoolean result = new AtomicBoolean(true);
+
         try {
-            validator.validate(new StreamSource(new File(path)));
+            PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher(String.format("glob:%s", path));
+
+            String folder = path.substring(0, path.indexOf('*'));
+            folder = folder.lastIndexOf('/') == -1 ? "" : folder.substring(0, folder.lastIndexOf('/'));
+
+            if (Files.notExists(Paths.get(folder))) {
+                System.err.println(String.format("Unable to find '%s'.", Paths.get(folder).toAbsolutePath()));
+                System.exit(4);
+            }
+
+            Files.walkFileTree(Paths.get(folder), new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path path, BasicFileAttributes basicFileAttributes) {
+                    if (pathMatcher.matches(path))
+                        if (!perform(validator, path.toFile()))
+                            result.set(false);
+
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            System.err.print("Unable to find files using glob: ");
+            System.err.println(e.getMessage());
+
+            return false;
+        }
+
+        return result.get();
+    }
+
+    private static boolean perform(Validator validator, File path) {
+        try {
+            validator.validate(new StreamSource(path));
             System.out.print("[OK  ] ");
             System.out.println(path);
 

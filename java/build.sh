@@ -1,18 +1,10 @@
 #!/bin/sh
 
+# This file is triggered by make inside a Docker image.
+
 set -e
 set -u
 
-# Create build folder
-mkdir -p /tmp/build /target
+mvn -B --no-transfer-progress clean package
 
-# Compile class
-javac \
-  -d /tmp/build \
-  /src/java/src/Main.java
-
-# Generate jar
-jar \
-  -cfe /target/xsdchecker.jar Main \
-  -C /tmp/build \
-  Main.class
+cp /src/target/xsdchecker.jar /target/

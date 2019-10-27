@@ -1,4 +1,4 @@
-.PHONY: jar graal
+.PHONY: graal
 
 graal:
 	@docker build -t klakegg/xsdchecker:snapshot .
@@ -10,8 +10,8 @@ graal:
 
 jar:
 	@docker run --rm -i \
-		-v $(shell pwd)/java:/src/java \
+		-v $(shell pwd)/java:/src \
 		-v $(shell pwd)/target:/target \
-		--workdir /src/java \
-		openjdk:8u212-jdk-alpine3.9 \
+		--workdir /src \
+		maven:3.6-jdk-8-slim \
 		sh build.sh
