@@ -13,24 +13,28 @@ FROM klakegg/graalvm-native AS graalvm
 COPY graal /src/graal
 COPY --from=maven /src/java/target/xsdchecker.jar /target/xsdchecker.jar
 
-RUN cd /src/graal && sh build.sh
+RUN cd /src/graal \
+ && sh build.sh
 
 
 # Combine files
-FROM scratch AS tmp
+FROM alpine:3.10 AS tmp
 
-COPY --from=graalvm /target/bin/xsdchecker /bin/xsdchecker
-COPY schemas /schemas
-COPY graal/run.sh /run.sh
+COPY --from=graalvm /target/bin/xsdchecker /files/bin/xsdchecker-official
+COPY schemas /files/schemas
+COPY graal/run.sh /files/bin/xsdchecker
+
+RUN chmod a+x /files/bin/*
+RUN ln -s /bin/xsdchecker /files/bin/xc
 
 
 # Final image
 FROM alpine:3.10
 
-COPY --from=tmp / /
+COPY --from=tmp /files /
 
 VOLUME /src
 
 WORKDIR /src
 
-ENTRYPOINT ["sh", "/run.sh"]
+ENTRYPOINT ["xsdschecker"]

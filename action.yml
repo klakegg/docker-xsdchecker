@@ -8,17 +8,26 @@ branding:
 inputs:
   xsd:
     description: XSD file.
-    required: true
+    required: false
     example: xsd/schema.xsd
-
   file:
-    description: File to validate
-    required: true
+    description: File to validate.
+    required: false
     example: example.xml
+
+  script:
+    description: Script to run.
+    required: false
+    example: xc --xslt2 **/*.xslt
+
+  script_path:
+    description: Script path to run.
+    required: false
+    example: validate_xsd.sh
 
 runs:
   using: docker
-  image: 'docker://klakegg/xsdchecker:1.0.2'
+  image: 'docker://klakegg/xsdchecker:edge'
   args:
     - ${{ inputs.xsd }}
     - ${{ inputs.file }}
