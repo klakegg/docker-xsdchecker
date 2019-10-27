@@ -1,13 +1,17 @@
-.PHONY: dist graal
+.PHONY: jar graal
 
 graal:
 	@docker build -t klakegg/xsdchecker:snapshot .
-
-dist:
 	@docker run --rm -i \
-		-v $(shell pwd)/dist:/src \
-		-v $(shell pwd)/graal/Main.java:/src/Main.java \
 		-v $(shell pwd)/target:/target \
-		--workdir /src \
+		--entrypoint cp \
+		klakegg/xsdchecker:snapshot \
+		/bin/xsdchecker /target/xsdchecker
+
+jar:
+	@docker run --rm -i \
+		-v $(shell pwd)/java:/src/java \
+		-v $(shell pwd)/target:/target \
+		--workdir /src/java \
 		openjdk:8u212-jdk-alpine3.9 \
 		sh build.sh

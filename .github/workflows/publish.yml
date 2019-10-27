@@ -12,21 +12,26 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: Build dist
-      run: make dist
+    - name: Build jar
+      run: make jar
 
-    - uses: klakegg/github-upload@v0.8.3
+    - name: Build image
+      run: make graal
+
+    - uses: klakegg/github-upload@v0.9.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        file: target/dist.zip
-        name: xsdchecker-${TAG}.zip
-        label: Distribution (zip)
+        file: target/xsdchecker.jar
+        name: xsdchecker-${TAG}.jar
+        label: JAR file
+        type: application/java-archive
 
-    - uses: klakegg/github-upload@v0.8.3
+    - uses: klakegg/github-upload@v0.9.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        file: target/dist.tar.gz
-        name: xsdchecker-${TAG}.tar.gz
-        label: Distribution (tar.gz)
+        file: target/xsdchecker
+        name: xsdchecker-${TAG}-linux-64bit
+        label: Executable (Linux 64bit)
+        type: application/x-executable

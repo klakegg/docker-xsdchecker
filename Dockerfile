@@ -1,8 +1,9 @@
 FROM klakegg/graalvm-native AS graalvm
 
-COPY graal /src
+COPY graal /src/graal
+COPY java /src/java
 
-RUN sh /src/build.sh
+RUN cd /src/graal && sh build.sh
 
 
 FROM alpine:3.10

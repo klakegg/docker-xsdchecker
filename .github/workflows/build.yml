@@ -13,8 +13,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
+    - name: Build jar
+      run: make jar
+
     - name: Build image
       run: make graal
-
-    - name: Build dist
-      run: make dist

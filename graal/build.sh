@@ -1,26 +1,14 @@
 #!/bin/sh
 
-# Create build folder
-mkdir -p /target/build
-
-# Compile class
-javac \
-  -d /target/build \
-  /src/Main.java
-
-# Generate jar
-jar \
-  -cfe /target/build/main.jar Main \
-  -C /target/build \
-  Main.class
+test -e /target/xsdchecker.jar || sh /src/java/build.sh
 
 # Create native image
 native-image \
   --static \
   --no-fallback \
   --allow-incomplete-classpath \
-  -jar /target/build/main.jar \
+  -jar /target/xsdchecker.jar \
   -H:Name=/target/bin/xsdchecker \
   -H:+ReportExceptionStackTraces \
-  -H:ReflectionConfigurationFiles=/src/java-xerces.json \
+  -H:ReflectionConfigurationFiles=/src/graal/java-xerces.json \
   -H:IncludeResourceBundles=com.sun.org.apache.xerces.internal.impl.msg.XMLSchemaMessages
