@@ -18,7 +18,7 @@ inputs:
 
 runs:
   using: docker
-  image: 'docker://klakegg/xsdchecker:1.0.1'
+  image: 'docker://klakegg/xsdchecker:1.0.2'
   args:
     - ${{ inputs.xsd }}
     - ${{ inpits.file }}
