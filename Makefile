@@ -6,7 +6,7 @@ graal:
 		-v $(shell pwd)/target:/target \
 		--entrypoint cp \
 		klakegg/xsdchecker:snapshot \
-		/bin/xsdchecker-official /target/xsdchecker
+		/bin/xsdchecker /target/xsdchecker
 
 jar:
 	@docker run --rm -i \

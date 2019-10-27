@@ -20,12 +20,11 @@ RUN cd /src/graal \
 # Combine files
 FROM alpine:3.10 AS tmp
 
-COPY --from=graalvm /target/bin/xsdchecker /files/bin/xsdchecker-official
+COPY --from=graalvm /target/bin/xsdchecker /files/bin/xsdchecker
 COPY schemas /files/schemas
-COPY graal/run.sh /files/bin/xsdchecker
+COPY graal/run.sh /files/bin/xc
 
 RUN chmod a+x /files/bin/*
-RUN ln -s /bin/xsdchecker /files/bin/xc
 
 
 # Final image
@@ -37,4 +36,4 @@ VOLUME /src
 
 WORKDIR /src
 
-ENTRYPOINT ["xsdschecker"]
+ENTRYPOINT ["xc"]
