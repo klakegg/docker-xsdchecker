@@ -12,9 +12,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author erlend
@@ -66,38 +63,21 @@ public class Main {
     }
 
     private static boolean performGlob(Validator validator, String path) {
-        AtomicBoolean result = new AtomicBoolean(true);
+        boolean result = true;
 
         try {
-            PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher(String.format("glob:%s", path));
-
-            String folder = path.substring(0, path.indexOf('*'));
-            folder = folder.lastIndexOf('/') == -1 ? "" : folder.substring(0, folder.lastIndexOf('/'));
-
-            if (Files.notExists(Paths.get(folder))) {
-                System.err.println(String.format("Unable to find '%s'.", Paths.get(folder).toAbsolutePath()));
-                System.exit(4);
-            }
-
-            Files.walkFileTree(Paths.get(folder), new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult visitFile(Path path, BasicFileAttributes basicFileAttributes) {
-                    if (pathMatcher.matches(path))
-                        if (!perform(validator, path.toFile()))
-                            result.set(false);
-
-                    return FileVisitResult.CONTINUE;
-                }
-            });
+            for (File file : ExtraFiles.glob(path))
+                if (!perform(validator, file))
+                    result = false;
         } catch (IOException e) {
             System.err.print("Unable to find files using glob: ");
             System.err.println(e.getMessage());
-
-            return false;
+            System.exit(5);
         }
 
-        return result.get();
+        return result;
     }
+
 
     private static boolean perform(Validator validator, File path) {
         try {
