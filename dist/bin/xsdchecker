@@ -1,0 +1,9 @@
+#!/bin/sh
+
+PROJECT=$(dirname $(dirname "$0"))
+
+if [ $JAVA_HOME ]; then
+    $JAVA_HOME/bin/java -jar $PROJECT/lib/xsdchecker.jar $@
+else
+    java -jar $PROJECT/lib/xsdchecker.jar $@
+fi

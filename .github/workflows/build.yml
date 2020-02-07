@@ -14,7 +14,10 @@ jobs:
     - name: Build jar
       run: make jar
 
-    - name: Build image
+    - name: Build distribution
+      run: make dist
+
+    - name: Build native image
       run: make graal
 
     - name: Upload "JAR file"
@@ -38,3 +41,25 @@ jobs:
         name: xsdchecker-${TAG}-linux-64bit
         label: Executable (Linux 64bit)
         type: application/x-executable
+
+    - name: Upload "Distribution (zip)"
+      uses: klakegg/github-upload@v0.9.1
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        file: target/dist.zip
+        name: xsdchecker-${TAG}.zip
+        label: Distribution (zip)
+        type: application/zip
+
+    - name: Upload "Distribution (tar.gz)"
+      uses: klakegg/github-upload@v0.9.1
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        file: target/dist.tar.gz
+        name: xsdchecker-${TAG}.tar.gz
+        label: Distribution (tar.gz)
+        type: application/x-tar
