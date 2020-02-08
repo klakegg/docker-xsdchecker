@@ -40,6 +40,9 @@ public class Main {
 
             if (path.startsWith("http")) {
                 schema = factory.newSchema(new URL(path));
+            } else if (path.startsWith("--") && System.getenv("XSD_PATH") != null) {
+                File file = new File(System.getenv("XSD_PATH") + "/", path.substring(2) + ".xsd");
+                schema = factory.newSchema(file);
             } else {
                 schema = factory.newSchema(new File(path));
             }
@@ -77,7 +80,6 @@ public class Main {
 
         return result;
     }
-
 
     private static boolean perform(Validator validator, File path) {
         try {

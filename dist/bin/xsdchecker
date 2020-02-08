@@ -2,6 +2,8 @@
 
 PROJECT=$(dirname $(dirname "$0"))
 
+export XSD_PATH=${PROJECT}/xsd
+
 if [ $JAVA_HOME ]; then
     $JAVA_HOME/bin/java -jar $PROJECT/lib/xsdchecker.jar $@
 else

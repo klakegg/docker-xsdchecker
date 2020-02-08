@@ -12,6 +12,8 @@ dist:
 	@docker run --rm -i \
 		-v $(shell pwd):/src \
 		-v $(shell pwd)/target:/target \
+		-e GITHUB_SHA \
+		-e GITHUB_REF \
 		--workdir /src/dist \
 		alpine:3.11 \
 		sh build.sh
