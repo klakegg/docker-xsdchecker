@@ -30,6 +30,8 @@ RUN chmod a+x /files/bin/*
 # Final image
 FROM alpine:3.10
 
+ENV XSD_PATH=/schemas
+
 COPY --from=tmp /files /
 
 VOLUME /src

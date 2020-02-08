@@ -8,5 +8,5 @@ Supports XSD 1.0.
   with:
     script: |
        xc --xsd-1.0 **/*.xsd
-       xc --xslt2 **/*.xslt
+       xc --xslt-2.0 **/*.xslt
 ```
